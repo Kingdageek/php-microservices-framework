@@ -122,7 +122,14 @@ class Model {
 	function delete($tab, $whr="1=1") {
 		$query = "DELETE FROM {$tab} WHERE {$whr}";
 		$res = $this->query($query);
-		return $this->mysqli->affected_rows;
+		if ($res) {
+			$ret["flag"] = 1;
+			$ret["rows"] = $this->mysqli->affected_rows;
+		} else {
+			$ret["flag"] = 0;
+			$ret["error"] = $this->mysqli->error;
+		}
+		return $ret;
 	}
 	// ------------------------------------------ CRUD OPERATIONS -------------------------------------------- //
 
