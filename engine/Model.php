@@ -9,13 +9,21 @@
 
 
 ini_set("date.timezone", "Africa/Lagos");
+// mysqli_report(MYSQLI_REPORT_STRICT);
 
 class Model {
 	private $mysqli;
 	private $numAlpha = ['R','A','9','F','1','W','G','S','H','3','E','4','Y','I','D','O','P','7','C','B','Z','U','M','5','J','L','2','Q','X','K','6','0','T','V','N','8'];
 
 	function __construct() {
-		$this->mysqli = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+		try {
+			$this->mysqli = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+		} catch (Exception $e) {
+			$feedback = $this->feedback("Database connection failed. Please contact administrator");
+			//$feedback["error"] = $e->message;
+			return $feedback;
+			exit;
+		}
 	}
 
 	function __destruct() {
@@ -38,7 +46,7 @@ class Model {
 
 	// ------------------------------------------ CRUD OPERATIONS -------------------------------------------- //
 	function create($tab, $arr=[]) {
-		$ret = 0;
+		$ret = [];
 		if (!empty($arr)) {
 			// Build the query;
 			$keys = '';
@@ -51,8 +59,13 @@ class Model {
 			$values = rtrim($values, ',');
 			$query = "INSERT INTO {$tab} ({$keys}) VALUES ({$values})";
 
-			$this->mysqli->query($query);
-			$ret = $this->mysqli->insert_id;
+			if ($this->mysqli->query($query)) {
+				$ret["flag"] = 1;
+				$ret["insert_id"] = $this->mysqli->insert_id;
+			} else {
+				$ret["flag"] = 0;
+				$ret["error"] = $this->mysqli->error;
+			}
 		}
 		return $ret;
 	}
@@ -68,7 +81,14 @@ class Model {
 
 		$query = "SELECT {$sels} FROM {$tabs} WHERE {$whr} {$opt}";
 		// echo $query;
-		return $this->feedbackRows($this->query($query));
+		$get = $this->query($query);
+		if ($get) {
+			$feedback = $this->feedbackRows($get);
+		} else {
+			$feedback = $this->feedback("data does not exist");
+			$feedback["error"] = $this->mysqli->error;
+		}
+		return $feedback;
 	}
 
 	function update($tab, $arr=[], $whr) {
@@ -76,7 +96,7 @@ class Model {
 		// $arr - this is the $key=>$value we want to update.
 		// $whr - this is the where clause.
 
-		$ret = 0;
+		$ret = [];
 		if (!empty($arr)) {
 			// Build the query;
 			$key_val = '';
@@ -88,8 +108,13 @@ class Model {
 			$query = "UPDATE {$tab} SET {$key_val} WHERE {$whr}";
 			// echo $query;
 
-			$this->mysqli->query($query);
-			$ret = $this->mysqli->affected_rows;
+			if ($this->mysqli->query($query)) {
+				$ret["flag"] = 1;
+				$ret["rows"] = $this->mysqli->affected_rows;
+			} else {
+				$ret["flag"] = 0;
+				$ret["error"] = $this->mysqli->error;
+			}
 		}
 		return $ret;
 	}

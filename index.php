@@ -9,6 +9,8 @@
 
 require_once 'engine/engine.class.php';
 
+DEFINE('DEBUG', true);
+
 $Engine = new Engine(); //We will use this to get functions from the engine class.
 $feedback = [];
 
@@ -29,4 +31,7 @@ if (isset($_POST["request"])) {
 
 header("Content-Type: application/json");
 
+if (!DEBUG) {
+	if (isset($feedback["error"])) $feedback["error"] = "debug is off";
+}
 echo json_encode($feedback);
