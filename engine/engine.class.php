@@ -7,13 +7,7 @@
 // LinkedIn: https://linkedin.com/in/olayinkaokewale
 // ---------------------------------------------------------------------------------------------------------------------------- //
 
-DEFINE("PRODUCTION", false);
-
-if (PRODUCTION) {
-	require_once 'online_config.php';
-} else {
-	require_once 'config.php';
-}
+require_once 'config.php';
 require_once 'Model.php';
 
 class Engine extends Model {

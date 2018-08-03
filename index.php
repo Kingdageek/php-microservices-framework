@@ -9,8 +9,6 @@
 
 require_once 'engine/engine.class.php';
 
-DEFINE('DEBUG', true);
-
 $Engine = new Engine(); //We will use this to get functions from the engine class.
 $feedback = [];
 

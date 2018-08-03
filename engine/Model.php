@@ -174,8 +174,8 @@ class Model {
 		return $this->mysqli->real_escape_string(filter_var(strip_tags($str), FILTER_SANITIZE_STRING));
 	}
 
-	function get($arr=[], $key='') {
-		return (isset($arr[$key])) ? $this->esc($arr[$key]) : "";
+	function get($arr=[], $key='', $default="") {
+		return (isset($arr[$key]) && $arr[$key] != "") ? $this->esc($arr[$key]) : $default;
 	}
 
 	function upload($file, $fileName, $path, $fileType) {
