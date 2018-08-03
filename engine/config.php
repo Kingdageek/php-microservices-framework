@@ -11,13 +11,13 @@ DEFINE('DEBUG', true);
 DEFINE("PRODUCTION", false);
 
 if (PRODUCTION) {
-	DEFINE ('DB_NAME', 'test');
-	DEFINE ('DB_USER', 'root'); // If you have custom user for your database, insert it here
-	DEFINE ('DB_PASS', ''); //change this to the password
-	DEFINE ('DB_HOST', '');
-} else {
 	DEFINE ('DB_NAME', 'database');
 	DEFINE ('DB_USER', 'db_user'); // If you have custom user for your database, insert it here
 	DEFINE ('DB_PASS', 'db_password'); //change this to the password
 	DEFINE ('DB_HOST', 'hostaddr');
+} else {
+	DEFINE ('DB_NAME', 'test');
+	DEFINE ('DB_USER', 'root'); // If you have custom user for your database, insert it here
+	DEFINE ('DB_PASS', ''); //change this to the password
+	DEFINE ('DB_HOST', '');
 }
